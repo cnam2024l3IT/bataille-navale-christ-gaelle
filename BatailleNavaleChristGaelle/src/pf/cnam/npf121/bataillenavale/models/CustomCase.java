@@ -1,12 +1,12 @@
 package pf.cnam.npf121.bataillenavale.models;
 
-public class Case {
+public class CustomCase {
 	private int x;
 	private int y;
 	private boolean occupee = false;
 
-	public Case(int x, int y) {
-		// TODO Auto-generated constructor stub
+	public CustomCase(int x, int y) {
+		
 		this.x = x;
 		this.y = y;
 		
