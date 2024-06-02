@@ -26,6 +26,10 @@ public class Joueur {
 		return grilleNavire;
 	}
 	
+	public GrillePion getGrillePion() {
+		return grillePion;
+	}
+	
 	public Set<Navire> getNavires() {
 		return navires;
 	}

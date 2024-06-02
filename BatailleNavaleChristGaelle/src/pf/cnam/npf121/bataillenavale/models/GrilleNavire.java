@@ -124,5 +124,21 @@ public class GrilleNavire extends Grille {
 	private Optional<Navire> trouverNavireParPosition(String position) {
 		return navires.stream().filter(navire -> navire.celluleExisteParPosition(position)).findAny();
 	}
+	
+	public String recupererToutesLesPositions() {
+		String positions = "";
+		for(int i = 0; i < colonnes.length; i++) {
+			for(int j = 0; j < lignes.length; j++) {
+				positions += colonnes[i] + lignes[j] + "|";
+			}
+		}
+		return positions;
+	}
+	
+	public boolean positionExiste(String position) {
+		Set<Cellule> allCellules = initialiser();
+		return allCellules.stream()
+				.map(c -> c.getPosition()).filter(p -> p.equals(position)).findAny().isPresent();
+	}
 
 }

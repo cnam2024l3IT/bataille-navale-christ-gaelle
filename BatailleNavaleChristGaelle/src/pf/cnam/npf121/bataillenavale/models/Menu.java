@@ -44,7 +44,7 @@ public class Menu {
 	}
 	
 	@SuppressWarnings("resource")
-	public String demanderPosition() {
+	public String demanderPosition(Joueur joueur) {
 		String position = "";
 		do {
 			System.out.println("Veuillez saisir une position :");
@@ -52,7 +52,7 @@ public class Menu {
 			
 			if(scanner.hasNextLine())
 				position = scanner.nextLine();
-		} while(position.isEmpty());
+		} while(!joueur.getGrilleNavire().positionExiste(position));
 		return position;
 	}
 	
@@ -60,18 +60,36 @@ public class Menu {
 	public Orientation demanderOrientation() {
 		int choix = 0;
 		do {
-			System.out.println("Veuillez saisir une orientation :");
-			System.out.println("1 - " + Orientation.VERTICAL);
-			System.out.println("2 - " + Orientation.HORIZONTAL);
 			Scanner scanner = new Scanner(System.in);
+			System.out.println("Veuillez saisir une orientation :");
+			for(int i = 0; i < Orientation.values().length; i++)
+				System.out.println(Orientation.values()[i].ordre + " - " + Orientation.values()[i]);
 			
 			if(scanner.hasNextInt())
+				choix = scanner.nextInt();
+			
+			if(Orientation.valueOfOrdre(choix) == null)
+				System.out.println("Choix incorrect");
+		} while(Orientation.valueOfOrdre(choix) == null);
+		return Orientation.valueOfOrdre(choix);
+	}
+	
+	@SuppressWarnings("resource")
+	public int demanderChoixAttaque() {
+		int choix = 0;
+		do {
+			System.out.println("Phase d'attaque : ");
+			System.out.println("1 - Afficher la grille de l'adversaire");
+			System.out.println("2 - Donner une position à attaquer");
+			Scanner scanner = new Scanner(System.in);
+			
+			if(scanner.hasNextInt()) 
 				choix = scanner.nextInt();
 			
 			if(choix != 1 && choix != 2)
 				System.out.println("Choix incorrect");
 		} while(choix != 1 && choix != 2);
-		return choix == 1 ? Orientation.VERTICAL : Orientation.HORIZONTAL;
+		return choix;
 	}
 
 }

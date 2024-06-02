@@ -33,7 +33,7 @@ public class BatailleNavale {
 				
 				if(choix == 2) {
 					try {
-						joueur.placerNavire(navireSelectionne, menu.demanderPosition(), 
+						joueur.placerNavire(navireSelectionne, menu.demanderPosition(joueur), 
 								menu.demanderOrientation());
 						navireSelectionne = null;
 					} catch (InvalidePositionException e) {
@@ -46,11 +46,27 @@ public class BatailleNavale {
 	
 	public void attaquer() {
 		// Chaque joueur attaque l'autre jusqu'à ce que l'un des 2 joueurs n'a plus de navire
+		// demander choix : afficher grille
 		do {
-			joueur1.attaquer(joueur2, menu.demanderPosition());
-			joueur2.attaquer(joueur1, menu.demanderPosition());
+			joueurAttaquer(joueur1, joueur2);
+			joueurAttaquer(joueur2, joueur1);
 		} while(joueur1.getGrilleNavire().getNavires().size() > 0 
 				&& joueur2.getGrilleNavire().getNavires().size() > 0);
+	}
+	
+	private void joueurAttaquer(Joueur joueur, Joueur adversaire) {
+		int choix = 0;
+		do {
+			choix = menu.demanderChoixAttaque();
+			
+			if(choix == 1) {
+				joueur.getGrillePion().afficher();
+			}
+			
+			if(choix == 2) {
+				joueur.attaquer(adversaire, menu.demanderPosition(joueur));
+			}
+		} while(choix != 2);
 	}
 	
 }

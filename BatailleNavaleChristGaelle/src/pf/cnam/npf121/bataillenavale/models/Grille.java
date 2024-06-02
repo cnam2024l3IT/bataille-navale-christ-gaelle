@@ -10,13 +10,15 @@ public abstract class Grille {
 	protected Set<Cellule> cellules = new HashSet<>();
 	
 	protected Grille() {
-		initialiser();
+		cellules = initialiser();
 	}
 	
-	private void initialiser() {
+	protected Set<Cellule> initialiser() {
+		Set<Cellule> allCellules = new HashSet<>();
 		for(int i = 0; i < colonnes.length; i++)
 			for(int j = 0; j < lignes.length; j++)
-				cellules.add(new Cellule(colonnes[i] + lignes[j], new Coordonnee(i, j)));
+				allCellules.add(new Cellule(colonnes[i] + lignes[j], new Coordonnee(i, j)));
+		return allCellules;
 	}
 	
 	protected abstract void afficher();
