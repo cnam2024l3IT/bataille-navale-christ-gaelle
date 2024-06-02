@@ -1,12 +1,12 @@
 package pf.cnam.npf121.bataillenavale;
 
-import pf.cnam.npf121.bataillenavale.models.Joueur;
+import pf.cnam.npf121.bataillenavale.models.BatailleNavale;
 
 public class BatailleNavaleApplication {
 
 	public static void main(String[] args) {
-		Joueur joueur = new Joueur("Bruh");
-		joueur.placerNavires(0);
+		BatailleNavale batailleNavale = new BatailleNavale();
+		batailleNavale.placerNavires();
 	}
 
 }
