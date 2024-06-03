@@ -3,6 +3,7 @@ package pf.cnam.npf121.bataillenavale.models;
 import java.util.Scanner;
 
 import pf.cnam.npf121.bataillenavale.models.enumerations.Orientation;
+import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public class Menu {
 
@@ -10,86 +11,65 @@ public class Menu {
 	
 	@SuppressWarnings("resource")
 	public Navire demanderSelectionNavire(Joueur joueur) {
-		System.out.println(joueur.getNom() + " - voici votre liste de navires");		
-		joueur.afficherNavires();
-		System.out.println(joueur.getNom() + " - saisir le nom du navire à ajouter à votre grille : ");
 		String nom = "";
-		Scanner scanner = new Scanner(System.in);
-		
-		if(scanner.hasNextLine())
-			nom = scanner.nextLine();
-		
-		if(joueur.navireExisteParNom(nom))
-			return joueur.recupererNavireParNom(nom);
-		
-		return null;
-	}
-	
-	@SuppressWarnings("resource")
-	public int demanderChoixPlacement() {
-		int choix = 0;
+		Navire navire = null;
 		do {
-			System.out.println("Placer le navire, sélectionner votre choix : ");
-			System.out.println("1 - Afficher votre grille");
-			System.out.println("2 - Saisir position");
+			System.out.println(joueur.getNom() + ", choisissez le navire à placer : (saisir le nom)");		
+			joueur.afficherNavires();
 			Scanner scanner = new Scanner(System.in);
 			
-			if(scanner.hasNextInt())
-				choix = scanner.nextInt();
+			if(scanner.hasNextLine())
+				nom = scanner.nextLine();
 			
-			if(choix != 1 && choix != 2)
-				System.out.println("Choix incorrect");
-		} while(choix != 1 && choix != 2);
-		return choix;
+			try {
+				navire = joueur.trouverNavireParNom(nom);
+			} catch (NonTrouveException e) {
+				System.out.println(e.getMessage());
+			}
+		} while(navire == null);
+		return navire;
 	}
 	
 	@SuppressWarnings("resource")
-	public String demanderPosition(Joueur joueur) {
+	public Cellule demanderPosition(Joueur joueur) {
 		String position = "";
+		Cellule cellule = null;
 		do {
-			System.out.println("Veuillez saisir une position :");
+			System.out.println(joueur.getNom() + ", veuillez saisir une position : ");
 			Scanner scanner = new Scanner(System.in);
 			
 			if(scanner.hasNextLine())
 				position = scanner.nextLine();
-		} while(!joueur.getGrilleNavire().positionExiste(position));
-		return position;
+			
+			try {
+				cellule = joueur.getGrilleNavire().recupererCellule(position);
+			} catch (NonTrouveException e) {
+				System.out.println(e.getMessage());
+			}
+		} while(cellule == null);
+		return cellule;
 	}
 	
 	@SuppressWarnings("resource")
-	public Orientation demanderOrientation() {
+	public Orientation demanderOrientation(Joueur joueur) {
 		int choix = 0;
+		Orientation orientation = null;
 		do {
 			Scanner scanner = new Scanner(System.in);
-			System.out.println("Veuillez saisir une orientation :");
+			System.out.println(joueur.getNom() + ", veuillez saisir une orientation :");
 			for(int i = 0; i < Orientation.values().length; i++)
-				System.out.println(Orientation.values()[i].ordre + " - " + Orientation.values()[i]);
+				Orientation.values()[i].afficher();
 			
 			if(scanner.hasNextInt())
 				choix = scanner.nextInt();
 			
-			if(Orientation.valueOfOrdre(choix) == null)
-				System.out.println("Choix incorrect");
-		} while(Orientation.valueOfOrdre(choix) == null);
-		return Orientation.valueOfOrdre(choix);
-	}
-	
-	@SuppressWarnings("resource")
-	public int demanderChoixAttaque() {
-		int choix = 0;
-		do {
-			System.out.println("Phase d'attaque : ");
-			System.out.println("1 - Afficher la grille de l'adversaire");
-			System.out.println("2 - Donner une position à attaquer");
-			Scanner scanner = new Scanner(System.in);
-			
-			if(scanner.hasNextInt()) 
-				choix = scanner.nextInt();
-			
-			if(choix != 1 && choix != 2)
-				System.out.println("Choix incorrect");
-		} while(choix != 1 && choix != 2);
-		return choix;
+			try {
+				orientation = Orientation.valueOfOrdre(choix);
+			} catch (NonTrouveException e) {
+				System.out.println(e.getMessage());
+			}
+		} while(orientation == null);
+		return orientation;
 	}
 
 }

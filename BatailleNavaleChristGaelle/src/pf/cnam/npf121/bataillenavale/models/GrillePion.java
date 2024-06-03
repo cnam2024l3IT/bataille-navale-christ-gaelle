@@ -1,7 +1,6 @@
 package pf.cnam.npf121.bataillenavale.models;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class GrillePion extends Grille {
@@ -12,41 +11,31 @@ public class GrillePion extends Grille {
 		super();
 	}
 	
-	public void ajouterCelluleTouchee(String position) {
-		Optional<Cellule> optionalCellule = recupererCellule(position);
-		
-		if(optionalCellule.isPresent()) {
-			cellulesTouchees.add(optionalCellule.get());
-		}
+	public void ajouterCelluleTouchee(Cellule cellule) {
+		cellulesTouchees.add(cellule);
 	}
 	
-	public void ajouterCelluleRatee(String position) {
-		Optional<Cellule> optionalCellule = recupererCellule(position);
-		
-		if(optionalCellule.isPresent()) {
-			cellulesRatees.add(optionalCellule.get());
-		}
+	public void ajouterCelluleRatee(Cellule cellule) {
+		cellulesRatees.add(cellule);
 	}
 
 	@Override
-	protected void afficher() {
+	public void afficher() {		
 		String txt = String.format("%3s", "");
-		for(int i = 0; i < colonnes.length; i++) {
+		for(int i = 0; i < colonnes.length; i++)
 			txt += colonnes[i] + " ";
-		}
 		System.out.println(txt);
 		for(int i = 0; i < lignes.length; i++) {
 			txt = String.format("%2s", lignes[i]) + "|";
 			for(int j = 0; j < colonnes.length; j++) {
 				String position = colonnes[j] + lignes[i];
 				
-				if(celluleTouchee(position)) {
+				if(celluleTouchee(position))
 					txt += "T|";
-				} else if(celluleRatee(position)) {
+				else if(celluleRatee(position))
 					txt += "R|";
-				} else {
+				else
 					txt += "_|";
-				}
 			}
 			System.out.println(txt);
 		}

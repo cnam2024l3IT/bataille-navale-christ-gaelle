@@ -1,10 +1,12 @@
 package pf.cnam.npf121.bataillenavale.models;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
-public abstract class Navire {
+import pf.cnam.npf121.bataillenavale.interfaces.AffichageMenu;
+import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
+
+public abstract class Navire implements AffichageMenu {
 	protected String nom;
 	protected int nombreCellules;
 	protected Set<Cellule> cellules = new HashSet<>();
@@ -12,6 +14,11 @@ public abstract class Navire {
 	public Navire(String nom, int nombreCellules) {
 		this.nom = nom;
 		this.nombreCellules = nombreCellules;
+	}
+	
+	@Override
+	public void afficher() {
+		System.out.println("- " + nom + " : " + nombreCellules + " cellule(s)");
 	}
 	
 	protected String getNom() {
@@ -35,14 +42,14 @@ public abstract class Navire {
 	}
 	
 	protected boolean celluleExisteParPosition(String position) {
-		return recupererCelluleParPosition(position).isPresent();
+		return cellules.stream()
+				.map(c -> c.getPosition()).filter(p -> p.equals(position)).findFirst().isPresent();
 	}
 	
-	protected Optional<Cellule> recupererCelluleParPosition(String position) {
-		return cellules.stream().filter(cellule -> cellule.getPosition().equals(position)).findFirst();
-	}
-	
-	protected Cellule getCelluleParPosition(String position) {
-		return recupererCelluleParPosition(position).get();
+	protected Cellule recupererCelluleParPosition(String position) throws NonTrouveException {
+		return cellules.stream()
+				.filter(c -> c.getPosition().equals(position)).findFirst()
+				.orElseThrow(() -> 
+					new NonTrouveException("Aucune cellule n'a été trouvée avec la position " + position));
 	}
 }

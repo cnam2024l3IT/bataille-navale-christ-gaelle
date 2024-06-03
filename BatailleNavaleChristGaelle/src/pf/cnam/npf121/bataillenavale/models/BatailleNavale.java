@@ -7,66 +7,58 @@ public class BatailleNavale {
 	private Joueur joueur1 = new Joueur("Joueur 1");
 	private Joueur joueur2 = new Joueur("Joueur 2");
 
-	public BatailleNavale() {}
-	
-	// déroulement du jeu
-	// 1 - les joueurs placent les navires
-	// 2 - chaque joueur attaque l'autre par tour
-	// 3 - le jeu s'arrête si un joueur a tous ses navires détruits
+	public BatailleNavale() {
+		initializeNavires(joueur1);
+		initializeNavires(joueur2);
+	}
 	
 	public void placerNavires() {
+		System.out.println("Joueurs, veuillez placer vos navires");
 		joueurPlacerNavires(joueur1);
 		joueurPlacerNavires(joueur2);
 	}
 	
+	private void initializeNavires(Joueur joueur) {
+		joueur.addNavire(new ContreTorpilleur());
+		joueur.addNavire(new Croiseur());
+		joueur.addNavire(new PorteAvion());
+		joueur.addNavire(new SousMarin());
+		joueur.addNavire(new Torpilleur());
+	}
+	
 	private void joueurPlacerNavires(Joueur joueur) {
-		Navire navireSelectionne = null;
+		System.out.println("Placement navire " + joueur.getNom());
 		do  {
-			if(navireSelectionne == null)
-				navireSelectionne = menu.demanderSelectionNavire(joueur);
-			
-			if(navireSelectionne != null) {
-				int choix = menu.demanderChoixPlacement();
-				
-				if(choix == 1)
-					joueur.getGrilleNavire().afficher();
-				
-				if(choix == 2) {
-					try {
-						joueur.placerNavire(navireSelectionne, menu.demanderPosition(joueur), 
-								menu.demanderOrientation());
-						navireSelectionne = null;
-					} catch (InvalidePositionException e) {
-						System.out.println(e.getMessage());
-					}
-				}
-			}
+			try {
+				joueur.afficherGrille();
+				joueur.placerNavire(menu.demanderSelectionNavire(joueur), menu.demanderPosition(joueur), 
+						menu.demanderOrientation(joueur));
+			} catch (InvalidePositionException e) {
+				System.out.println(e.getMessage());
+			} 
 		} while(joueur.getNavires().size() > 0);
 	}
 	
 	public void attaquer() {
-		// Chaque joueur attaque l'autre jusqu'à ce que l'un des 2 joueurs n'a plus de navire
-		// demander choix : afficher grille
+		System.out.println("Joueurs, passez à l'attaque");
 		do {
+			// revoir l'enchainement des tours
 			joueurAttaquer(joueur1, joueur2);
 			joueurAttaquer(joueur2, joueur1);
 		} while(joueur1.getGrilleNavire().getNavires().size() > 0 
 				&& joueur2.getGrilleNavire().getNavires().size() > 0);
+		
+		if(joueur1.getGrilleNavire().getNavires().size() > 0) {
+			System.out.println(joueur1.getNom() + ", vous avez gagné.");
+		} else {
+			System.out.println(joueur2.getNom() + ", vous avez gagné.");
+		}
 	}
 	
 	private void joueurAttaquer(Joueur joueur, Joueur adversaire) {
-		int choix = 0;
-		do {
-			choix = menu.demanderChoixAttaque();
-			
-			if(choix == 1) {
-				joueur.getGrillePion().afficher();
-			}
-			
-			if(choix == 2) {
-				joueur.attaquer(adversaire, menu.demanderPosition(joueur));
-			}
-		} while(choix != 2);
+		joueur.afficherGrille();
+		joueur.afficherGrilleAdversaire();
+		joueur.attaquer(adversaire, menu.demanderPosition(joueur));
 	}
 	
 }
