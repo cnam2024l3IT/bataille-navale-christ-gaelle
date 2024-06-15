@@ -35,7 +35,7 @@ public class Menu {
 		String position = "";
 		Cellule cellule = null;
 		do {
-			System.out.println(joueur.getNom() + ", veuillez saisir une position : ");
+			System.out.println(joueur.getNom() + ", veuillez saisir une position : exemple A1");
 			Scanner scanner = new Scanner(System.in);
 			
 			if(scanner.hasNextLine())
