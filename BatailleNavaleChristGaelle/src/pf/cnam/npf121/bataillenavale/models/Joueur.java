@@ -35,7 +35,6 @@ public class Joueur {
 	
 	public void afficherNavires() {
 		navires.stream().forEach(navire -> navire.afficher());
-		navires.stream().toList();
 	}
 	
 	public Navire trouverNavireParNom(String nom) throws NonTrouveException {
