@@ -10,15 +10,17 @@ public abstract class Navire implements AffichageMenu {
 	protected String nom;
 	protected int nombreCellules;
 	protected Set<Cellule> cellules = new HashSet<>();
+	protected int numero;
 	
-	public Navire(String nom, int nombreCellules) {
+	public Navire(String nom, int nombreCellules, int numero) {
 		this.nom = nom;
 		this.nombreCellules = nombreCellules;
+		this.numero = numero;
 	}
 	
 	@Override
 	public void afficher() {
-		System.out.println("- " + nom + " : " + nombreCellules + " cellule(s)");
+		System.out.println(numero + " - " + nom + " : " + nombreCellules + " cellule(s)");
 	}
 	
 	protected String getNom() {

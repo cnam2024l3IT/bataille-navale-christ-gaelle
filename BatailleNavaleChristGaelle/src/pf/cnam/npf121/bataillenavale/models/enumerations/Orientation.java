@@ -7,8 +7,10 @@ import pf.cnam.npf121.bataillenavale.interfaces.AffichageMenu;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public enum Orientation implements AffichageMenu {
-	VERTICAL(1),
-	HORIZONTAL(2);
+	UP(1),
+	RIGHT(2),
+	DOWN(3),
+	LEFT(4);
 	
 	public final int ordre;
 	
