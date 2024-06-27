@@ -37,6 +37,7 @@ public class BatailleNavale {
 				System.out.println(e.getMessage());
 			} 
 		} while(joueur.getNavires().size() > 0);
+		joueur.afficherGrille();
 	}
 	
 	public void attaquer() {
