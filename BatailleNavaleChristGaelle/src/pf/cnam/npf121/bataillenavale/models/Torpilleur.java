@@ -3,7 +3,7 @@ package pf.cnam.npf121.bataillenavale.models;
 public class Torpilleur extends Navire {
 
 	public Torpilleur() {
-		super("Torpilleur", 2, 5);
+		super(5, "Torpilleur", 2);
 	}
 
 }

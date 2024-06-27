@@ -1,64 +1,107 @@
 package pf.cnam.npf121.bataillenavale.models;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import pf.cnam.npf121.bataillenavale.models.exceptions.InvalidePositionException;
+import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public class BatailleNavale {
-	private Menu menu = new Menu();
-	private Joueur joueur1 = new Joueur("Joueur 1");
-	private Joueur joueur2 = new Joueur("Joueur 2");
+	private ArrayList<Joueur> joueurs = new ArrayList<>();
+	private BatailleNavaleConsole console = new BatailleNavaleConsole();
 
-	public BatailleNavale() {
-		initializeNavires(joueur1);
-		initializeNavires(joueur2);
+	public BatailleNavale(ArrayList<Joueur> joueurs) {
+		this.joueurs = joueurs;
 	}
 	
-	public void placerNavires() {
-		System.out.println("Joueurs, veuillez placer vos navires");
-		joueurPlacerNavires(joueur1);
-		joueurPlacerNavires(joueur2);
+	public void demarrer() {
+		console.afficher("Début de la partie");
+		console.afficher("Phase 1 : placement des navires");
+		placementNavires();
+		console.afficher("Phase 2 : attaques");
+		attaques();
+		afficherResultat();
+		console.afficher("Fin de la partie");
 	}
 	
-	private void initializeNavires(Joueur joueur) {
-		joueur.addNavire(new ContreTorpilleur());
-		joueur.addNavire(new Croiseur());
-		joueur.addNavire(new PorteAvion());
-		joueur.addNavire(new SousMarin());
-		joueur.addNavire(new Torpilleur());
+	private void placementNavires() {
+		joueurs.forEach(j -> placerNavires(j, getNavires()));
 	}
 	
-	private void joueurPlacerNavires(Joueur joueur) {
-		System.out.println("Placement navire " + joueur.getNom());
+	private void placerNavires(Joueur joueur, Set<Navire> navires) {
 		do  {
 			try {
-				joueur.afficherGrille();
-				joueur.placerNavire(menu.demanderSelectionNavire(joueur), menu.demanderPosition(joueur), 
-						menu.demanderOrientation(joueur));
+				console.afficherGrille(joueur);
+				Navire navire = console.obtenirNavire(joueur, navires);
+				joueur.placerNavire(navire, console.obtenirCellule(joueur), console.obtenirOrientation(joueur));
+				navires.remove(navire);
 			} catch (InvalidePositionException e) {
-				System.out.println(e.getMessage());
+				console.afficher(e.getMessage());
 			} 
-		} while(joueur.getNavires().size() > 0);
+		} while(navires.size() > 0);	
 	}
 	
-	public void attaquer() {
-		System.out.println("Joueurs, passez à l'attaque");
-		do {
-			// revoir l'enchainement des tours
-			joueurAttaquer(joueur1, joueur2);
-			joueurAttaquer(joueur2, joueur1);
-		} while(joueur1.getGrilleNavire().getNavires().size() > 0 
-				&& joueur2.getGrilleNavire().getNavires().size() > 0);
+	private Set<Navire> getNavires() {
+		Set<Navire> navires = new HashSet<>();
+		navires.add(new ContreTorpilleur());
+		navires.add(new Croiseur());
+		navires.add(new PorteAvion());
+		navires.add(new SousMarin());
+		navires.add(new Torpilleur());
+		return navires;
+	}
+	
+	private void attaques() {
+		setAttaque(joueurs.get(0), joueurs.get(1));
+	}
+	
+	private void setAttaque(Joueur attaquant, Joueur cible) {
+		if(cible.aPerdu()) {
+			return;
+		}
 		
-		if(joueur1.getGrilleNavire().getNavires().size() > 0) {
-			System.out.println(joueur1.getNom() + ", vous avez gagné.");
-		} else {
-			System.out.println(joueur2.getNom() + ", vous avez gagné.");
+		faireAttaque(attaquant, cible);
+		setAttaque(cible, attaquant);
+	}
+	
+	private void faireAttaque(Joueur attaquant, Joueur cible) {
+		console.afficherGrille(attaquant);
+		console.afficherGrilleAdversaire(attaquant);
+		Cellule cellule = console.obtenirCellule(attaquant);
+		try {
+			attaquerCellule(cible, cellule.getPosition());
+			attaquant.ajouterCelluleTouchee(cellule);
+		} catch (NonTrouveException e) {
+			console.afficher(e.getMessage());
+			attaquant.ajouterCelluleRatee(cellule);
 		}
 	}
 	
-	private void joueurAttaquer(Joueur joueur, Joueur adversaire) {
-		joueur.afficherGrille();
-		joueur.afficherGrilleAdversaire();
-		joueur.attaquer(adversaire, menu.demanderPosition(joueur));
+	public void attaquerCellule(Joueur joueur, String position) throws NonTrouveException {
+		Navire navire = joueur.retirerNavireParPosition(position);
+		console.afficher("Touché");
+		
+		if(!navire.aCoule())
+			joueur.addNavire(navire);
+		else
+			console.afficher("Coulé");
+	}
+	
+	private void afficherResultat() {
+		if(isMatchNul()) {
+			console.afficher("Match nul, aucun joueur n'a gagné !");
+		}  else {
+			console.afficher(getGagnant().getNom() + ", vous avez gagné.");
+		}
+	}
+	
+	private boolean isMatchNul() {;
+		return joueurs.stream().filter(j -> !j.aPerdu()).count() == 0;
+	}
+	
+	private Joueur getGagnant() {
+		return joueurs.stream().filter(j -> !j.aPerdu()).findFirst().get();
 	}
 	
 }

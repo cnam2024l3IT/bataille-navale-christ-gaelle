@@ -3,11 +3,11 @@ package pf.cnam.npf121.bataillenavale.models;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GrillePion extends Grille {
+public class GrilleAdversaire extends Grille {
 	private Set<Cellule> cellulesTouchees = new HashSet<>();
 	private Set<Cellule> cellulesRatees = new HashSet<>();
 
-	public GrillePion() {
+	public GrilleAdversaire() {
 		super();
 	}
 	
@@ -18,13 +18,13 @@ public class GrillePion extends Grille {
 	public void ajouterCelluleRatee(Cellule cellule) {
 		cellulesRatees.add(cellule);
 	}
-
-	@Override
-	public void afficher() {		
+	
+	public String[] getStatus() {
+		String[] status = new String[lignes.length + 1];
 		String txt = String.format("%3s", "");
 		for(int i = 0; i < colonnes.length; i++)
 			txt += colonnes[i] + " ";
-		System.out.println(txt);
+		status[0] = txt;
 		for(int i = 0; i < lignes.length; i++) {
 			txt = String.format("%2s", lignes[i]) + "|";
 			for(int j = 0; j < colonnes.length; j++) {
@@ -37,8 +37,9 @@ public class GrillePion extends Grille {
 				else
 					txt += "_|";
 			}
-			System.out.println(txt);
+			status[i + 1] = txt;
 		}
+		return status;
 	}
 	
 	private boolean celluleTouchee(String position) {

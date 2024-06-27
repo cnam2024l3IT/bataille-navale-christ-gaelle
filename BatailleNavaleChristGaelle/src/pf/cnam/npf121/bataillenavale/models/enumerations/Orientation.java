@@ -3,10 +3,9 @@ package pf.cnam.npf121.bataillenavale.models.enumerations;
 import java.util.HashMap;
 import java.util.Map;
 
-import pf.cnam.npf121.bataillenavale.interfaces.AffichageMenu;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public enum Orientation implements AffichageMenu {
+public enum Orientation {
 	UP(1),
 	RIGHT(2),
 	DOWN(3),
@@ -34,9 +33,7 @@ public enum Orientation implements AffichageMenu {
         return orientation;
     }
 
-	@Override
-	public void afficher() {
-		System.out.println(ordre + " - " + name());
-		
+	public String[] getStatus() {
+		return new String[] {ordre + " - " + name()};
 	}
 }

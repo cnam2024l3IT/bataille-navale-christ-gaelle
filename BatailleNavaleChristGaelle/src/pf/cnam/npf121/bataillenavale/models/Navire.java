@@ -3,28 +3,22 @@ package pf.cnam.npf121.bataillenavale.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import pf.cnam.npf121.bataillenavale.interfaces.AffichageMenu;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public abstract class Navire implements AffichageMenu {
+public abstract class Navire {
+	protected int numero;
 	protected String nom;
 	protected int nombreCellules;
 	protected Set<Cellule> cellules = new HashSet<>();
-	protected int numero;
 	
-	public Navire(String nom, int nombreCellules, int numero) {
+	public Navire(int numero, String nom, int nombreCellules) {
+		this.numero = numero;
 		this.nom = nom;
 		this.nombreCellules = nombreCellules;
-		this.numero = numero;
 	}
 	
-	@Override
-	public void afficher() {
-		System.out.println(numero + " - " + nom + " : " + nombreCellules + " cellule(s)");
-	}
-	
-	protected String getNom() {
-		return nom;
+	public String[] getStatus() {
+		return new String[] {numero + " - " + nom + " : " + nombreCellules + " cellule(s)"};
 	}
 	
 	protected int getNombreCellule() {
@@ -33,6 +27,10 @@ public abstract class Navire implements AffichageMenu {
 	
 	protected Set<Cellule> getCellules() {
 		return cellules;
+	}
+	
+	protected int getNumero() {
+		return numero;
 	}
 	
 	protected void setCellules(Set<Cellule> cellules) {
@@ -53,5 +51,9 @@ public abstract class Navire implements AffichageMenu {
 				.filter(c -> c.getPosition().equals(position)).findFirst()
 				.orElseThrow(() -> 
 					new NonTrouveException("Aucune cellule n'a été trouvée avec la position " + position));
+	}
+	
+	protected boolean aCoule() {
+		return cellules.size() == 0;
 	}
 }
