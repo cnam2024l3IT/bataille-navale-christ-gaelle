@@ -1,8 +1,5 @@
 package pf.cnam.npf121.bataillenavale.models;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import pf.cnam.npf121.bataillenavale.models.enumerations.Orientation;
 import pf.cnam.npf121.bataillenavale.models.exceptions.InvalidePositionException;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
@@ -10,8 +7,7 @@ import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 public class Joueur {
 	private String nom;
 	private GrilleNavire grilleNavire = new GrilleNavire();
-	private GrillePion grillePion = new GrillePion();
-	private Set<Navire> navires = new HashSet<>();
+	private GrilleAdversaire grilleAdversaire = new GrilleAdversaire();
 
 	public Joueur(String nom) {
 		this.nom = nom;
@@ -21,56 +17,57 @@ public class Joueur {
 		return nom;
 	}
 	
-	public GrilleNavire getGrilleNavire() {
-		return grilleNavire;
+	public boolean aPerdu() {
+		return grilleNavire.estVide();
 	}
 	
-	public Set<Navire> getNavires() {
-		return navires;
+	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) throws InvalidePositionException {
+		grilleNavire.placerNavire(navire, cellule, orientation);
+	}
+	
+	public String[] getStatusGrille() {
+		return grilleNavire.getStatus();
+	}
+	
+	public String[] getStatusGrilleAdversaire() {
+		return grilleAdversaire.getStatus();
+	}
+	
+	public Cellule recupererCellule(String position) throws NonTrouveException {
+		return grilleNavire.recupererCellule(position);
+	}
+	
+	public void ajouterCelluleTouchee(Cellule cellule) {
+		grilleAdversaire.ajouterCelluleTouchee(cellule);
+	}
+	
+	public void ajouterCelluleRatee(Cellule cellule) {
+		grilleAdversaire.ajouterCelluleRatee(cellule);
+	}
+	
+	public Navire recupererNavireParPosition(String position) throws NonTrouveException {
+		return grilleNavire.recupererNavireParCellule(position);
+	}
+	
+	public void removeNavire(Navire navire) {
+		grilleNavire.removeNavire(navire);
+	}
+	
+	public void addCelluleDetruite(Cellule cellule) {
+		grilleNavire.addCelluleDetruite(cellule);
 	}
 	
 	public void addNavire(Navire navire) {
-		navires.add(navire);
+		grilleNavire.addNavire(navire);
 	}
 	
-	public void afficherNavires() {
-		navires.stream().forEach(navire -> navire.afficher());
-	}
-	
-	public Navire trouverNavireParNom(String nom) throws NonTrouveException {
-		return navires.stream()
-				.filter(navire -> navire.getNom().equals(nom)).findFirst()
-				.orElseThrow(() -> new NonTrouveException("Aucun navire n'a été trouvé avec le nom " + nom));
-	}
-	
-	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) 
-			throws InvalidePositionException {
-		grilleNavire.placerNavire(navire, cellule, orientation);
+	public Navire retirerNavireParPosition(String position) throws NonTrouveException {
+		Navire navire = recupererNavireParPosition(position);
 		removeNavire(navire);
+		Cellule cellule = navire.recupererCelluleParPosition(position);
+		navire.retirerCellule(cellule);
+		addCelluleDetruite(cellule);
+		return navire;
 	}
 	
-	private void removeNavire(Navire navire) {
-		navires.remove(navire);
-	}
-	
-	public void attaquer(Joueur joueur, Cellule cellule) {
-		try {
-			joueur.getGrilleNavire().attaqueSurCellule(cellule.getPosition());
-			grillePion.ajouterCelluleTouchee(cellule);
-		} catch (NonTrouveException e) {
-			System.out.println("Ratée");
-			grillePion.ajouterCelluleRatee(cellule);
-		}
-	}
-	
-	public void afficherGrille() {
-		System.out.println("Grille : " + nom);
-		grilleNavire.afficher();
-	}
-	
-	public void afficherGrilleAdversaire() {
-		System.out.println("Grille de votre adversaire");
-		grillePion.afficher();
-	}
-
 }

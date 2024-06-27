@@ -19,16 +19,12 @@ public class GrilleNavire extends Grille {
 		cellules.addAll(allCellules);
 	}
 	
-	public Set<Navire> getNavires() {
-		return navires;
-	}
-
-	@Override
-	public void afficher() {
+	public String[] getStatus() {
+		String[] status = new String[lignes.length + 1];
 		String txt = String.format("%3s", "");
 		for(int i = 0; i < colonnes.length; i++)
 			txt += colonnes[i] + " ";
-		System.out.println(txt);
+		status[0] = txt;
 		for(int i = 0; i < lignes.length; i++) {
 			txt = String.format("%2s", lignes[i]) + "|";
 			for(int j = 0; j < colonnes.length; j++) {
@@ -43,14 +39,31 @@ public class GrilleNavire extends Grille {
 				else
 					txt += "A|";
 			}
-			System.out.println(txt);
+			status[i + 1] = txt;
 		}
+		return status;
 	}
 	
-	public boolean celluleOccupee(String position) {
+	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) 
+			throws InvalidePositionException {
+		Set<Cellule> cellulesNavire = recupererCellulesNavire(cellule, navire.getNombreCellule(), orientation);
+		
+		if(cellulesNavire.size() < navire.getNombreCellule())
+			throw new InvalidePositionException("Position invalide");
+		
+		navire.setCellules(cellulesNavire);
+		removeCellules(cellulesNavire);
+		cellulesNavire.stream().forEach(c -> retirerCellulesAdjacentes(c));
+		navires.add(navire);
+	}
+	
+	public void removeNavire(Navire navire) {
+		navires.remove(navire);
+	}
+	
+	private boolean celluleOccupee(String position) {
 		try {
-			Navire navire = recupererNavireParCellule(position);
-			return navire != null;
+			return recupererNavireParCellule(position) != null;
 		} catch (NonTrouveException e) {
 			return false;
 		}
@@ -65,23 +78,8 @@ public class GrilleNavire extends Grille {
 		return cellulesDetruites.stream()
 				.map(cellule -> cellule.getPosition()).filter(p -> p.equals(position)).findAny().isPresent();
 	}
-	
-	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) 
-			throws InvalidePositionException {
-		Set<Cellule> cellulesNavire = recupererCellulesNavire(cellule, navire.getNombreCellule(), 
-		orientation);
-		
-		if(cellulesNavire.size() < navire.getNombreCellule())
-			throw new InvalidePositionException("Position invalide");
-		
-		navire.setCellules(cellulesNavire);
-		removeCellules(cellulesNavire);
-		cellulesNavire.stream().forEach(c -> retirerCellulesAdjacentes(c));
-		navires.add(navire);
-	}
 
-	private Set<Cellule> recupererCellulesNavire(Cellule cellule, int nombreCellules, 
-			Orientation orientation) {
+	private Set<Cellule> recupererCellulesNavire(Cellule cellule, int nombreCellules, Orientation orientation) {
 		Predicate<Cellule> predicateCellule = c -> {
 			int offset = nombreCellules - 1;
 			switch(orientation) {
@@ -106,7 +104,7 @@ public class GrilleNavire extends Grille {
 	private void removeCellules(Set<Cellule> cellules) {
 		this.cellules.removeAll(cellules);
 	}
-	// Corriger pour retirer les cellules adjacentes en diagonale
+	
 	private void retirerCellulesAdjacentes(Cellule cellule) {
 		Predicate<Cellule> predicateCellule = c -> 
 			(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() 
@@ -118,31 +116,22 @@ public class GrilleNavire extends Grille {
 		removeCellules(cellules.stream().filter(predicateCellule).collect(Collectors.toSet()));
 	}
 	
-	private Navire recupererNavireParCellule(String position) throws NonTrouveException {
+	public Navire recupererNavireParCellule(String position) throws NonTrouveException {
 		return navires.stream().filter(navire -> navire.celluleExisteParPosition(position))
 				.findFirst().orElseThrow(() -> 
 					new NonTrouveException("Aucun navire n'a été trouvé à la position "  + position));
 	}
 	
-	public String recupererPosition(String position) throws NonTrouveException {
-		return allCellules.stream()
-				.map(c -> c.getPosition()).filter(p -> p.equals(position)).findFirst()
-				.orElseThrow(() -> 
-					new NonTrouveException("Aucune position n'a été trouvée avec la valeur " + position));
+	public void addCelluleDetruite(Cellule cellule) {
+		cellulesDetruites.add(cellule);
 	}
 	
-	public void attaqueSurCellule(String position) throws NonTrouveException {
-		Navire navire = recupererNavireParCellule(position);
-		navires.remove(navire);
-		Cellule cellule = navire.recupererCelluleParPosition(position);
-		navire.retirerCellule(cellule);
-		cellulesDetruites.add(cellule);
-		System.out.println("Touché");
-		
-		if(navire.getCellules().size() > 0)
-			navires.add(navire);
-		else
-			System.out.println("Coulé");
+	public void addNavire(Navire navire) {
+		navires.add(navire);
 	}
-
+	
+	public boolean estVide() {
+		return navires.size() == 0;
+	}
+	
 }

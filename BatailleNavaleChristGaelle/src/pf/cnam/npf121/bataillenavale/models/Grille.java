@@ -3,10 +3,9 @@ package pf.cnam.npf121.bataillenavale.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import pf.cnam.npf121.bataillenavale.interfaces.AffichageMenu;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public abstract class Grille implements AffichageMenu {
+public abstract class Grille {
 	protected final String[] colonnes = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
 	protected final String[] lignes = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 	protected Set<Cellule> allCellules = new HashSet<>();
