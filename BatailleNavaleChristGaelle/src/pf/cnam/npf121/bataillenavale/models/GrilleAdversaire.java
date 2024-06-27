@@ -3,7 +3,9 @@ package pf.cnam.npf121.bataillenavale.models;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GrilleAdversaire extends Grille {
+import pf.cnam.npf121.bataillenavale.interfaces.Statusable;
+
+public class GrilleAdversaire extends Grille implements Statusable {
 	private Set<Cellule> cellulesTouchees = new HashSet<>();
 	private Set<Cellule> cellulesRatees = new HashSet<>();
 
@@ -19,7 +21,7 @@ public class GrilleAdversaire extends Grille {
 		cellulesRatees.add(cellule);
 	}
 	
-	public String[] getStatus() {
+	public String[] status() {
 		String[] status = new String[lignes.length + 1];
 		String txt = String.format("%3s", "");
 		for(int i = 0; i < colonnes.length; i++)
