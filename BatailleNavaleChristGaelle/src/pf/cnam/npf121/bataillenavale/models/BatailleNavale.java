@@ -40,6 +40,7 @@ public class BatailleNavale {
 				console.afficher(e.getMessage());
 			} 
 		} while(navires.size() > 0);	
+		console.afficherGrille(joueur);
 	}
 	
 	private Set<Navire> getNavires() {
