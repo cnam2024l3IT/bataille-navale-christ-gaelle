@@ -53,7 +53,7 @@ public class BatailleNavaleConsole {
 	}
 	
 	private void afficherListeNavires(Set<Navire> navires) {
-		navires.stream().sorted((n1, n2) -> n1.getNumero() - n2.getNumero()).forEach(n -> afficherStatus(n.getStatus()));
+		navires.stream().sorted((n1, n2) -> n1.getNumero() - n2.getNumero()).forEach(n -> afficherStatus(n.status()));
 	}
 	
 	@SuppressWarnings("resource")
@@ -120,7 +120,7 @@ public class BatailleNavaleConsole {
 	
 	private void afficherListeOrientations() {
 		for(int i = 0; i < Orientation.values().length; i++)
-			afficherStatus(Orientation.values()[i].getStatus());
+			afficherStatus(Orientation.values()[i].status());
 	}
 
 }

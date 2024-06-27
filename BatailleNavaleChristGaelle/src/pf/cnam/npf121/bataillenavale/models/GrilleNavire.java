@@ -5,11 +5,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import pf.cnam.npf121.bataillenavale.interfaces.Statusable;
 import pf.cnam.npf121.bataillenavale.models.enumerations.Orientation;
 import pf.cnam.npf121.bataillenavale.models.exceptions.InvalidePositionException;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public class GrilleNavire extends Grille {
+public class GrilleNavire extends Grille implements Statusable {
 	private Set<Navire> navires = new HashSet<>();
 	protected Set<Cellule> cellules = new HashSet<>();
 	private Set<Cellule> cellulesDetruites = new HashSet<>();
@@ -19,7 +20,7 @@ public class GrilleNavire extends Grille {
 		cellules.addAll(allCellules);
 	}
 	
-	public String[] getStatus() {
+	public String[] status() {
 		String[] status = new String[lignes.length + 1];
 		String txt = String.format("%3s", "");
 		for(int i = 0; i < colonnes.length; i++)
@@ -112,7 +113,11 @@ public class GrilleNavire extends Grille {
 					|| c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1)) 
 			|| (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() 
 				&& (c.getCoordonnee().getX() == cellule.getCoordonnee().getX() - 1 
-					|| c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1));
+					|| c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() - 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() - 1 ))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() - 1 ))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() - 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1 ))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1 ));
 		removeCellules(cellules.stream().filter(predicateCellule).collect(Collectors.toSet()));
 	}
 	

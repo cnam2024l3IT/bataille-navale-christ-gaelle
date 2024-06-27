@@ -26,11 +26,11 @@ public class Joueur {
 	}
 	
 	public String[] getStatusGrille() {
-		return grilleNavire.getStatus();
+		return grilleNavire.status();
 	}
 	
 	public String[] getStatusGrilleAdversaire() {
-		return grilleAdversaire.getStatus();
+		return grilleAdversaire.status();
 	}
 	
 	public Cellule recupererCellule(String position) throws NonTrouveException {
