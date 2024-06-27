@@ -82,13 +82,24 @@ public class GrilleNavire extends Grille {
 
 	private Set<Cellule> recupererCellulesNavire(Cellule cellule, int nombreCellules, 
 			Orientation orientation) {
-		Predicate<Cellule> predicateCellule = c -> orientation == Orientation.VERTICAL ? 
-				c.getCoordonnee().getX() == cellule.getCoordonnee().getX() 
+		Predicate<Cellule> predicateCellule = c -> {
+			int offset = nombreCellules - 1;
+			switch(orientation) {
+			case UP: return c.getCoordonnee().getX() == cellule.getCoordonnee().getX() 
+					&& c.getCoordonnee().getY() <= cellule.getCoordonnee().getY() 
+					&& c.getCoordonnee().getY() >= cellule.getCoordonnee().getY() - offset;
+			case DOWN: return c.getCoordonnee().getX() == cellule.getCoordonnee().getX() 
 					&& c.getCoordonnee().getY() >= cellule.getCoordonnee().getY() 
-					&& c.getCoordonnee().getY() <= (cellule.getCoordonnee().getY() + nombreCellules - 1)
-				: c.getCoordonnee().getY() == cellule.getCoordonnee().getY() 
-						&& c.getCoordonnee().getX() >= cellule.getCoordonnee().getX() 
-						&& c.getCoordonnee().getX() <= (cellule.getCoordonnee().getX() + nombreCellules - 1);
+					&& c.getCoordonnee().getY() <= cellule.getCoordonnee().getY() + offset;
+			case LEFT: return c.getCoordonnee().getY() == cellule.getCoordonnee().getY() 
+					&& c.getCoordonnee().getX() <= cellule.getCoordonnee().getX() 
+					&& c.getCoordonnee().getX() >= cellule.getCoordonnee().getX() - offset;
+			case RIGHT: return c.getCoordonnee().getY() == cellule.getCoordonnee().getY() 
+					&& c.getCoordonnee().getX() >= cellule.getCoordonnee().getX() 
+					&& c.getCoordonnee().getX() <= cellule.getCoordonnee().getX() + offset;
+			default: return false;
+			}
+		};
 		return cellules.stream().filter(predicateCellule).collect(Collectors.toSet());
 	}
 	
