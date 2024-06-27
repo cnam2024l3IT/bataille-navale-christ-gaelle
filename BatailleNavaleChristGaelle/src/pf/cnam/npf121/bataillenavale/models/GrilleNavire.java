@@ -114,10 +114,10 @@ public class GrilleNavire extends Grille implements Statusable {
 			|| (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() 
 				&& (c.getCoordonnee().getX() == cellule.getCoordonnee().getX() - 1 
 					|| c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1))
-			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX()- 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() - 1 ))
-			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX()+ 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() - 1 ))
-			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX()- 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1 ))
-			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX()+ 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1 ));
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() - 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() - 1 ))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() - 1 ))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() - 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1 ))
+			||(c.getCoordonnee().getX() == cellule.getCoordonnee().getX() + 1 && (c.getCoordonnee().getY() == cellule.getCoordonnee().getY() + 1 ));
 		removeCellules(cellules.stream().filter(predicateCellule).collect(Collectors.toSet()));
 	}
 	
