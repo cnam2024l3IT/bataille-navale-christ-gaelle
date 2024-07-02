@@ -1,5 +1,7 @@
 package pf.cnam.npf121.bataillenavale.models;
 
+import java.util.Set;
+
 import pf.cnam.npf121.bataillenavale.models.enumerations.Orientation;
 import pf.cnam.npf121.bataillenavale.models.exceptions.InvalidePositionException;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
@@ -9,12 +11,21 @@ public class Joueur {
 	private GrilleNavire grilleNavire = new GrilleNavire();
 	private GrilleAdversaire grilleAdversaire = new GrilleAdversaire();
 
-	public Joueur(String nom) {
+	public Joueur(String nom, Set<Cellule> cellules) {
 		this.nom = nom;
+		grilleNavire.setCellules(cellules);
 	}
 	
 	public String getNom() {
 		return nom;
+	}
+	
+	public GrilleNavire getGrilleNavire() {
+		return grilleNavire;
+	}
+	
+	public GrilleAdversaire getGrilleAdversaire() {
+		return grilleAdversaire;
 	}
 	
 	public boolean aPerdu() {
@@ -23,18 +34,6 @@ public class Joueur {
 	
 	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) throws InvalidePositionException {
 		grilleNavire.placerNavire(navire, cellule, orientation);
-	}
-	
-	public String[] getStatusGrille() {
-		return grilleNavire.status();
-	}
-	
-	public String[] getStatusGrilleAdversaire() {
-		return grilleAdversaire.status();
-	}
-	
-	public Cellule recupererCellule(String position) throws NonTrouveException {
-		return grilleNavire.recupererCellule(position);
 	}
 	
 	public void ajouterCelluleTouchee(Cellule cellule) {

@@ -3,10 +3,9 @@ package pf.cnam.npf121.bataillenavale.models.enumerations;
 import java.util.HashMap;
 import java.util.Map;
 
-import pf.cnam.npf121.bataillenavale.interfaces.Statusable;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public enum Orientation implements Statusable {
+public enum Orientation {
 	UP(1),
 	RIGHT(2),
 	DOWN(3),
@@ -33,8 +32,10 @@ public enum Orientation implements Statusable {
 		
         return orientation;
     }
-	
-	public String[] status() {
-		return new String[] {ordre + " - " + name()};
+
+	@Override
+	public String toString() {
+		return ordre + " - " + name();
 	}
+
 }

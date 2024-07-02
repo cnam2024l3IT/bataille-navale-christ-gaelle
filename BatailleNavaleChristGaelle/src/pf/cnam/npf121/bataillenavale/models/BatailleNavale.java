@@ -2,17 +2,19 @@ package pf.cnam.npf121.bataillenavale.models;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import pf.cnam.npf121.bataillenavale.models.exceptions.InvalidePositionException;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public class BatailleNavale {
-	private ArrayList<Joueur> joueurs = new ArrayList<>();
-	private BatailleNavaleConsole console = new BatailleNavaleConsole();
+	private List<Joueur> joueurs = new ArrayList<>();
+	private final BatailleNavaleConsole console;
 
-	public BatailleNavale(ArrayList<Joueur> joueurs) {
+	public BatailleNavale(ArrayList<Joueur> joueurs, GrilleCreator grilleCreator) {
 		this.joueurs = joueurs;
+		this.console = new BatailleNavaleConsole(grilleCreator);
 	}
 	
 	public void demarrer() {
@@ -58,9 +60,8 @@ public class BatailleNavale {
 	}
 	
 	private void setAttaque(Joueur attaquant, Joueur cible) {
-		if(cible.aPerdu()) {
+		if(cible.aPerdu())
 			return;
-		}
 		
 		faireAttaque(attaquant, cible);
 		setAttaque(cible, attaquant);
@@ -79,7 +80,7 @@ public class BatailleNavale {
 		}
 	}
 	
-	public void attaquerCellule(Joueur joueur, String position) throws NonTrouveException {
+	private void attaquerCellule(Joueur joueur, String position) throws NonTrouveException {
 		Navire navire = joueur.retirerNavireParPosition(position);
 		console.afficher("Touché");
 		
@@ -90,11 +91,10 @@ public class BatailleNavale {
 	}
 	
 	private void afficherResultat() {
-		if(isMatchNul()) {
+		if(isMatchNul())
 			console.afficher("Match nul, aucun joueur n'a gagné !");
-		}  else {
+		else
 			console.afficher(getGagnant().getNom() + ", vous avez gagné.");
-		}
 	}
 	
 	private boolean isMatchNul() {;

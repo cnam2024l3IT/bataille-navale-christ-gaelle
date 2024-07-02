@@ -9,9 +9,10 @@ import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public class BatailleNavaleConsole {
 	private AffichageConsole console = s -> System.out.println(s);
+	private final GrilleCreator grilleCreator;
 
-	public BatailleNavaleConsole() {
-		// TODO Auto-generated constructor stub
+	public BatailleNavaleConsole(GrilleCreator grilleCreator) {
+		this.grilleCreator = grilleCreator;
 	}
 	
 	public void afficher(String message) {
@@ -20,18 +21,17 @@ public class BatailleNavaleConsole {
 	
 	public void afficherGrille(Joueur joueur) {
 		console.afficher("Grille : " + joueur.getNom());
-		afficherStatus(joueur.getStatusGrille());
+		afficherStatus(status(joueur.getGrilleNavire()));
 	}
 	
 	public void afficherGrilleAdversaire(Joueur joueur) {
 		console.afficher("Grille de votre adversaire");
-		afficherStatus(joueur.getStatusGrilleAdversaire());
+		afficherStatus(status(joueur.getGrilleAdversaire()));
 	}
 	
 	private void afficherStatus(String[] status) {
-		for(int i = 0; i < status.length; i++) {
+		for(int i = 0; i < status.length; i++)
 			console.afficher(status[i]);
-		}
 	}
 
 	public Navire obtenirNavire(Joueur joueur, Set<Navire> navires) {
@@ -53,7 +53,7 @@ public class BatailleNavaleConsole {
 	}
 	
 	private void afficherListeNavires(Set<Navire> navires) {
-		navires.stream().sorted((n1, n2) -> n1.getNumero() - n2.getNumero()).forEach(n -> afficherStatus(n.status()));
+		navires.stream().sorted((n1, n2) -> n1.getNumero() - n2.getNumero()).forEach(n -> console.afficher(n + ""));
 	}
 	
 	@SuppressWarnings("resource")
@@ -75,9 +75,8 @@ public class BatailleNavaleConsole {
 	public Cellule obtenirCellule(Joueur joueur) {
 		Cellule cellule = null;
 		do {
-			
 			try {
-				cellule = joueur.recupererCellule(demanderPosition(joueur));
+				cellule = grilleCreator.recupererCellule(demanderPosition(joueur));
 			} catch (NonTrouveException e) {
 				console.afficher(e.getMessage());
 			}
@@ -120,7 +119,38 @@ public class BatailleNavaleConsole {
 	
 	private void afficherListeOrientations() {
 		for(int i = 0; i < Orientation.values().length; i++)
-			afficherStatus(Orientation.values()[i].status());
+			console.afficher(Orientation.values()[i] + "");
+	}
+	
+	private String[] status(Grille grille) {
+		String[] status = new String[grilleCreator.getLignes().length + 1];
+		status[0] = grilleCreator.getRowColonnes();
+		String txt;
+		for(int i = 0; i < grilleCreator.getLignes().length; i++) {
+			txt = String.format("%2s", grilleCreator.getLignes()[i]) + "|";
+			for(int j = 0; j < grilleCreator.getColonnes().length; j++) {
+				String position = grilleCreator.getColonnes()[j] + grilleCreator.getLignes()[i];
+				switch(grille.getCelluleStatus(position)) {
+				case ADJACENTE: txt += "A|";
+					break;
+				case DETRUITE: txt += "X|";
+					break;
+				case OCCUPEE: txt += "N|";
+					break;
+				case RATEE: txt += "R|";
+					break;
+				case TOUCHEE: txt += "T|";
+					break;
+				case VIDE: txt += "_|";
+					break;
+				default:
+					break;
+				
+				}
+			}
+			status[i + 1] = txt;
+		}
+		return status;
 	}
 
 }
