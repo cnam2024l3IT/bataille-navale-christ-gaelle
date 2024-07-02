@@ -12,6 +12,12 @@ public class GrilleAdversaire extends Grille {
 	public GrilleAdversaire() {
 		super();
 	}
+
+	@Override
+	protected CelluleStatus getCelluleStatus(String position) {
+		return celluleTouchee(position) ? CelluleStatus.TOUCHEE : 
+			(celluleRatee(position) ? CelluleStatus.RATEE : CelluleStatus.VIDE);
+	}
 	
 	public void ajouterCelluleTouchee(Cellule cellule) {
 		cellulesTouchees.add(cellule);
@@ -29,12 +35,6 @@ public class GrilleAdversaire extends Grille {
 	private boolean celluleRatee(String position) {
 		return cellulesRatees.stream()
 				.map(cellule -> cellule.getPosition()).filter(p -> p.equals(position)).findAny().isPresent();
-	}
-
-	@Override
-	protected CelluleStatus getCelluleStatus(String position) {
-		return celluleTouchee(position) ? CelluleStatus.TOUCHEE : 
-			(celluleRatee(position) ? CelluleStatus.RATEE : CelluleStatus.VIDE);
 	}
 
 }

@@ -28,11 +28,6 @@ public class BatailleNavaleConsole {
 		console.afficher("Grille de votre adversaire");
 		afficherStatus(status(joueur.getGrilleAdversaire()));
 	}
-	
-	private void afficherStatus(String[] status) {
-		for(int i = 0; i < status.length; i++)
-			console.afficher(status[i]);
-	}
 
 	public Navire obtenirNavire(Joueur joueur, Set<Navire> navires) {
 		Navire navire = null;
@@ -44,6 +39,35 @@ public class BatailleNavaleConsole {
 			}
 		} while(navire == null);
 		return navire;
+	}
+	
+	public Cellule obtenirCellule(Joueur joueur) {
+		Cellule cellule = null;
+		do {
+			try {
+				cellule = GrilleManager.getInstance().recupererCellule(demanderPosition(joueur));
+			} catch (NonTrouveException e) {
+				console.afficher(e.getMessage());
+			}
+		} while(cellule == null);
+		return cellule;
+	}
+	
+	public Orientation obtenirOrientation(Joueur joueur) {
+		Orientation orientation = null;
+		do {
+			try {
+				orientation = Orientation.valueOfOrdre(demanderOrientation(joueur));
+			} catch (NonTrouveException e) {
+				System.out.println(e.getMessage());
+			}
+		} while(orientation == null);
+		return orientation;
+	}
+	
+	private void afficherStatus(String[] status) {
+		for(int i = 0; i < status.length; i++)
+			console.afficher(status[i]);
 	}
 	
 	private int demanderNumero(Joueur joueur, Set<Navire> navires) {
@@ -72,18 +96,6 @@ public class BatailleNavaleConsole {
 				.orElseThrow(() -> new NonTrouveException("Aucun navire n'a été trouvé avec le numéro " + numero));
 	}
 	
-	public Cellule obtenirCellule(Joueur joueur) {
-		Cellule cellule = null;
-		do {
-			try {
-				cellule = GrilleManager.getInstance().recupererCellule(demanderPosition(joueur));
-			} catch (NonTrouveException e) {
-				console.afficher(e.getMessage());
-			}
-		} while(cellule == null);
-		return cellule;
-	}
-	
 	private String demanderPosition(Joueur joueur) {
 		console.afficher(joueur.getNom() + ", veuillez saisir une position : ");
 		return recevoirLine();
@@ -97,18 +109,6 @@ public class BatailleNavaleConsole {
 			return scanner.nextLine();
 		
 		return "";
-	}
-	
-	public Orientation obtenirOrientation(Joueur joueur) {
-		Orientation orientation = null;
-		do {
-			try {
-				orientation = Orientation.valueOfOrdre(demanderOrientation(joueur));
-			} catch (NonTrouveException e) {
-				System.out.println(e.getMessage());
-			}
-		} while(orientation == null);
-		return orientation;
 	}
 	
 	private int demanderOrientation(Joueur joueur) {
