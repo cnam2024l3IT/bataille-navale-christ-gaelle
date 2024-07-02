@@ -1,7 +1,6 @@
 package pf.cnam.npf121.bataillenavale.models;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,11 +9,10 @@ import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public class BatailleNavale {
 	private List<Joueur> joueurs = new ArrayList<>();
-	private final BatailleNavaleConsole console;
+	private final BatailleNavaleConsole console = new BatailleNavaleConsole();
 
 	public BatailleNavale(ArrayList<Joueur> joueurs) {
 		this.joueurs = joueurs;
-		this.console = new BatailleNavaleConsole();
 	}
 	
 	public void demarrer() {
