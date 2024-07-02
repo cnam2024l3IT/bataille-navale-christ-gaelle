@@ -37,6 +37,31 @@ public class GrilleNavire extends Grille {
 		navires.remove(navire);
 	}
 	
+	public Navire recupererNavireParCellule(String position) throws NonTrouveException {
+		return navires.stream().filter(navire -> navire.celluleExisteParPosition(position))
+				.findFirst().orElseThrow(() -> 
+					new NonTrouveException("Aucun navire n'a été trouvé à la position "  + position));
+	}
+	
+	public void addCelluleDetruite(Cellule cellule) {
+		cellulesDetruites.add(cellule);
+	}
+	
+	public void addNavire(Navire navire) {
+		navires.add(navire);
+	}
+	
+	public boolean estVide() {
+		return navires.size() == 0;
+	}
+
+	@Override
+	protected CelluleStatus getCelluleStatus(String position) {
+		return celluleOccupee(position) ? CelluleStatus.OCCUPEE : 
+			(celluleLibre(position) ? CelluleStatus.VIDE : (celluleDetruite(position) ? 
+					CelluleStatus.DETRUITE : CelluleStatus.ADJACENTE));
+	}
+	
 	private boolean celluleOccupee(String position) {
 		try {
 			return recupererNavireParCellule(position) != null;
@@ -87,31 +112,6 @@ public class GrilleNavire extends Grille {
 				&& c.getCoordonnee().getY() >= cellule.getCoordonnee().getY() - 1 
 				&& c.getCoordonnee().getY() <= cellule.getCoordonnee().getY() + 1;
 		removeCellules(cellules.stream().filter(predicateCellule).collect(Collectors.toSet()));
-	}
-	
-	public Navire recupererNavireParCellule(String position) throws NonTrouveException {
-		return navires.stream().filter(navire -> navire.celluleExisteParPosition(position))
-				.findFirst().orElseThrow(() -> 
-					new NonTrouveException("Aucun navire n'a été trouvé à la position "  + position));
-	}
-	
-	public void addCelluleDetruite(Cellule cellule) {
-		cellulesDetruites.add(cellule);
-	}
-	
-	public void addNavire(Navire navire) {
-		navires.add(navire);
-	}
-	
-	public boolean estVide() {
-		return navires.size() == 0;
-	}
-
-	@Override
-	protected CelluleStatus getCelluleStatus(String position) {
-		return celluleOccupee(position) ? CelluleStatus.OCCUPEE : 
-			(celluleLibre(position) ? CelluleStatus.VIDE : (celluleDetruite(position) ? 
-					CelluleStatus.DETRUITE : CelluleStatus.ADJACENTE));
 	}
 	
 }

@@ -35,14 +35,6 @@ public class GrilleManager {
 		this.cellules = new Cellules(buildCellules(lignes, colonnes));
 	}
 	
-	private Set<Cellule> buildCellules(String[] lignes, String[] colonnes) {
-		Set<Cellule> cellules = new HashSet<>();
-		for(int i = 0; i < colonnes.length; i++)
-			for(int j = 0; j < lignes.length; j++)
-				cellules.add(new Cellule(colonnes[i] + lignes[j], new Coordonnee(i, j)));
-		return cellules;
-	}
-	
 	public Set<Cellule> getCellules() {
 		try {
 			return cellules.clone().getCellules();
@@ -76,6 +68,14 @@ public class GrilleManager {
 		} catch (CloneNotSupportedException e) {
 			return new HashSet<>();
 		}
+	}
+	
+	private Set<Cellule> buildCellules(String[] lignes, String[] colonnes) {
+		Set<Cellule> cellules = new HashSet<>();
+		for(int i = 0; i < colonnes.length; i++)
+			for(int j = 0; j < lignes.length; j++)
+				cellules.add(new Cellule(colonnes[i] + lignes[j], new Coordonnee(i, j)));
+		return cellules;
 	}
 
 }
