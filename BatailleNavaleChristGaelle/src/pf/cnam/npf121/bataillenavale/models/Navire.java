@@ -3,10 +3,9 @@ package pf.cnam.npf121.bataillenavale.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import pf.cnam.npf121.bataillenavale.interfaces.Statusable;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public abstract class Navire implements Statusable {
+public abstract class Navire {
 	protected int numero;
 	protected String nom;
 	protected int nombreCellules;
@@ -17,9 +16,10 @@ public abstract class Navire implements Statusable {
 		this.nom = nom;
 		this.nombreCellules = nombreCellules;
 	}
-	
-	public String[] status() {
-		return new String[] {numero + " - " + nom + " : " + nombreCellules + " cellule(s)"};
+
+	@Override
+	public String toString() {
+		return numero + " - " + nom + " : " + nombreCellules + " cellule(s)";
 	}
 	
 	protected int getNombreCellule() {

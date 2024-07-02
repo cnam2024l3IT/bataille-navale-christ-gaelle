@@ -17,24 +17,20 @@ public class Joueur {
 		return nom;
 	}
 	
+	public GrilleNavire getGrilleNavire() {
+		return grilleNavire;
+	}
+	
+	public GrilleAdversaire getGrilleAdversaire() {
+		return grilleAdversaire;
+	}
+	
 	public boolean aPerdu() {
 		return grilleNavire.estVide();
 	}
 	
 	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) throws InvalidePositionException {
 		grilleNavire.placerNavire(navire, cellule, orientation);
-	}
-	
-	public String[] getStatusGrille() {
-		return grilleNavire.status();
-	}
-	
-	public String[] getStatusGrilleAdversaire() {
-		return grilleAdversaire.status();
-	}
-	
-	public Cellule recupererCellule(String position) throws NonTrouveException {
-		return grilleNavire.recupererCellule(position);
 	}
 	
 	public void ajouterCelluleTouchee(Cellule cellule) {
