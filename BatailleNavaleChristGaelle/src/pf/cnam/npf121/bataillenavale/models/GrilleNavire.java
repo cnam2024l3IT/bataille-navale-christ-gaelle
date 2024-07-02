@@ -17,11 +17,8 @@ public class GrilleNavire extends Grille {
 
 	public GrilleNavire() {
 		super();
-	}
-	
-	public void setCellules(Set<Cellule> cellules) {
-		this.cellules = cellules;
-	}
+		cellules = GrilleManager.getInstance().getCellules();
+	};
 	
 	public void placerNavire(Navire navire, Cellule cellule, Orientation orientation) 
 			throws InvalidePositionException {

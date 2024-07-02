@@ -12,9 +12,9 @@ public class BatailleNavale {
 	private List<Joueur> joueurs = new ArrayList<>();
 	private final BatailleNavaleConsole console;
 
-	public BatailleNavale(ArrayList<Joueur> joueurs, GrilleCreator grilleCreator) {
+	public BatailleNavale(ArrayList<Joueur> joueurs) {
 		this.joueurs = joueurs;
-		this.console = new BatailleNavaleConsole(grilleCreator);
+		this.console = new BatailleNavaleConsole();
 	}
 	
 	public void demarrer() {
@@ -28,7 +28,7 @@ public class BatailleNavale {
 	}
 	
 	private void placementNavires() {
-		joueurs.forEach(j -> placerNavires(j, getNavires()));
+		joueurs.forEach(j -> placerNavires(j, GrilleManager.getInstance().getNavires()));
 	}
 	
 	private void placerNavires(Joueur joueur, Set<Navire> navires) {
@@ -43,16 +43,6 @@ public class BatailleNavale {
 			} 
 		} while(navires.size() > 0);	
 		console.afficherGrille(joueur);
-	}
-	
-	private Set<Navire> getNavires() {
-		Set<Navire> navires = new HashSet<>();
-		navires.add(new ContreTorpilleur());
-		navires.add(new Croiseur());
-		navires.add(new PorteAvion());
-		navires.add(new SousMarin());
-		navires.add(new Torpilleur());
-		return navires;
 	}
 	
 	private void attaques() {

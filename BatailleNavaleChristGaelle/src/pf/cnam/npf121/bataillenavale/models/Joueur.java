@@ -1,7 +1,5 @@
 package pf.cnam.npf121.bataillenavale.models;
 
-import java.util.Set;
-
 import pf.cnam.npf121.bataillenavale.models.enumerations.Orientation;
 import pf.cnam.npf121.bataillenavale.models.exceptions.InvalidePositionException;
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
@@ -11,9 +9,8 @@ public class Joueur {
 	private GrilleNavire grilleNavire = new GrilleNavire();
 	private GrilleAdversaire grilleAdversaire = new GrilleAdversaire();
 
-	public Joueur(String nom, Set<Cellule> cellules) {
+	public Joueur(String nom) {
 		this.nom = nom;
-		grilleNavire.setCellules(cellules);
 	}
 	
 	public String getNom() {

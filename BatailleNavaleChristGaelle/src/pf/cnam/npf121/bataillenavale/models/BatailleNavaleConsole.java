@@ -9,10 +9,10 @@ import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
 public class BatailleNavaleConsole {
 	private AffichageConsole console = s -> System.out.println(s);
-	private final GrilleCreator grilleCreator;
+	private GrilleManager grilleManager;
 
-	public BatailleNavaleConsole(GrilleCreator grilleCreator) {
-		this.grilleCreator = grilleCreator;
+	public BatailleNavaleConsole() {
+		grilleManager = GrilleManager.getInstance();
 	}
 	
 	public void afficher(String message) {
@@ -76,7 +76,7 @@ public class BatailleNavaleConsole {
 		Cellule cellule = null;
 		do {
 			try {
-				cellule = grilleCreator.recupererCellule(demanderPosition(joueur));
+				cellule = GrilleManager.getInstance().recupererCellule(demanderPosition(joueur));
 			} catch (NonTrouveException e) {
 				console.afficher(e.getMessage());
 			}
@@ -123,13 +123,15 @@ public class BatailleNavaleConsole {
 	}
 	
 	private String[] status(Grille grille) {
-		String[] status = new String[grilleCreator.getLignes().length + 1];
-		status[0] = grilleCreator.getRowColonnes();
+		String[] lignes = grilleManager.getLignes();
+		String[] colonnes = grilleManager.getColonnes();
+		String[] status = new String[lignes.length + 1];
+		status[0] = grilleManager.getRowColonnes();
 		String txt;
-		for(int i = 0; i < grilleCreator.getLignes().length; i++) {
-			txt = String.format("%2s", grilleCreator.getLignes()[i]) + "|";
-			for(int j = 0; j < grilleCreator.getColonnes().length; j++) {
-				String position = grilleCreator.getColonnes()[j] + grilleCreator.getLignes()[i];
+		for(int i = 0; i < lignes.length; i++) {
+			txt = String.format("%2s", lignes[i]) + "|";
+			for(int j = 0; j < lignes.length; j++) {
+				String position = colonnes[j] + lignes[i];
 				switch(grille.getCelluleStatus(position)) {
 				case ADJACENTE: txt += "A|";
 					break;

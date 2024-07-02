@@ -5,12 +5,31 @@ import java.util.Set;
 
 import pf.cnam.npf121.bataillenavale.models.exceptions.NonTrouveException;
 
-public final class GrilleCreator {
-	private final String[] lignes;
-	private final String[] colonnes;
-	private final Cellules cellules;
+public class GrilleManager {
+	private static volatile GrilleManager instance;
+
+	public static GrilleManager getInstance() {
+		GrilleManager result = instance;
+        if (result != null) {
+            return result;
+        }
+        synchronized(GrilleManager.class) {
+            if (instance == null) {
+                instance = new GrilleManager();
+            }
+            return instance;
+        }
+	}
 	
-	public GrilleCreator(String[] lignes, String[] colonnes) {
+	private String[] lignes;
+	private String[] colonnes;
+	private Cellules cellules;
+	private Navires navires = new Navires();
+
+	private GrilleManager() {
+	}
+	
+	public void initialize(String[] lignes, String[] colonnes) {
 		this.lignes = lignes;
 		this.colonnes = colonnes;
 		this.cellules = new Cellules(buildCellules(lignes, colonnes));
@@ -22,6 +41,14 @@ public final class GrilleCreator {
 			for(int j = 0; j < lignes.length; j++)
 				cellules.add(new Cellule(colonnes[i] + lignes[j], new Coordonnee(i, j)));
 		return cellules;
+	}
+	
+	public Set<Cellule> getCellules() {
+		try {
+			return cellules.clone().getCellules();
+		} catch (CloneNotSupportedException e) {
+			return new HashSet<>();
+		}
 	}
 
 	public String[] getLignes() {
@@ -43,9 +70,9 @@ public final class GrilleCreator {
 		return txt;
 	}
 	
-	public Set<Cellule> getCellules() {
+	public Set<Navire> getNavires() {
 		try {
-			return cellules.clone().getCellules();
+			return navires.clone().getNavires();
 		} catch (CloneNotSupportedException e) {
 			return new HashSet<>();
 		}
